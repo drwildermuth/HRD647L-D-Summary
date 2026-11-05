@@ -45,6 +45,7 @@ button, textarea, input { font: inherit; color: inherit; }
 .topbar { display: none; }
 .banner { background: var(--blue-soft); border-bottom: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px 16px; font-size: 15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
 #savestatus { color: var(--muted); }
+.bkwarn { color: var(--red); font-weight: 700; }
 .themebtn { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 2px 10px; cursor: pointer; font-size: 14px; }
 main { min-width: 0; }
 .page { max-width: 760px; margin: 0 auto; padding: 28px max(20px, env(safe-area-inset-right, 0px)) 72px 20px; display: flex; flex-direction: column; gap: 18px; }
@@ -134,7 +135,8 @@ input.inp.line { field-sizing: fixed; }
   <div id="scrim"></div>
   <div>
     <div class="topbar"><button class="btn small" id="menubtn" type="button" aria-label="Open the list of steps">Steps</button><span class="brand" style="margin:0;font-size:17px">Client Project Guide</span></div>
-    <div class="banner"><span><strong>Your notes save in this browser on this device only.</strong> Save a backup file now and then. Do not type confidential client information.</span><span><span id="savestatus"></span> <button class="themebtn" id="themebtn" type="button">Light / dark</button></span></div>
+    <div class="banner"><span><strong>Your notes save in this browser on this device only.</strong> Use the same browser each time, not a private window. Do not type confidential client information.</span><span><span id="savestatus"></span> <button class="themebtn" id="themebtn" type="button">Light / dark</button></span>
+    <span class="bkline" style="flex-basis:100%"><span id="bkstatus" role="status"></span> <button class="btn small" id="bkbtn" type="button">Save a backup file</button></span></div>
     <main id="main"></main>
   </div>
 </div>
@@ -312,7 +314,7 @@ MY OBJECTIVES:
           { t: "check", text: "Can you trace each objective to something the client said? Could you watch someone do it? Edit your objectives above in your own words. Later prompts use what is in those boxes." },
           { t: "done", text: "you have one to three objectives in your own words." },
           { t: "stop", title: "Build your course skeleton in Rise", paras: [
-            { text: "Your objectives are enough to start. Open Rise and build a cover page with your course title, three to five placeholder lessons (a title and a note on what will go in each), and one marked spot where your scenario will go. Placeholder text is fine, and you can change it later. Then come back for Step 4." },
+            { text: "Your objectives are enough to start. Open Rise and build a cover page with your course title, three to five placeholder lessons (a title and a note on what will go in each), and one marked spot where your scenario will go. Placeholder text is fine, and you can change it later. Then come back for Step 4. Before you leave the guide, save a backup." },
             { text: "When you are ready to share it: Publish (top right), Quick Share, Copy link. You will paste the link in Step 6." } ] }
         ] }
     ] },
@@ -454,7 +456,7 @@ CHANGES TO MAKE:
   function persist() {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function () {
-      try { localStorage.setItem(KEY, JSON.stringify(data)); setStatus('Saved in this browser'); }
+      try { localStorage.setItem(KEY, JSON.stringify(data)); setStatus('Saved in this browser'); updateBk(); }
       catch (e) { memOnly = true; setStatus('Not saved: this browser blocks storage. Copy your notes before leaving.'); }
     }, 350);
     setStatus('Saving…');
@@ -553,6 +555,30 @@ CHANGES TO MAKE:
     return viaLink();
   }
 
+  /* ---------- backup status ---------- */
+  var BKKEY = 'hrd647_guide_backup_v1';
+  function hashStr(t) { var h = 0; for (var i = 0; i < t.length; i++) { h = ((h << 5) - h + t.charCodeAt(i)) | 0; } return String(h); }
+  function hasNotes() { return Object.keys(data).some(function (k) { var v = data[k]; return typeof v === 'string' ? v.trim() : v === true; }); }
+  function bkInfo() { try { return JSON.parse(localStorage.getItem(BKKEY) || 'null'); } catch (e) { return null; } }
+  function updateBk() {
+    var e = document.getElementById('bkstatus'), b = document.getElementById('bkbtn'); if (!e) return;
+    var info = bkInfo(), cur = hashStr(JSON.stringify(data));
+    e.className = '';
+    if (!hasNotes()) { e.textContent = 'Back up your notes after you write some.'; return; }
+    if (!info) { e.textContent = 'You have not saved a backup file yet. Save one now, and again before you stop for the day.'; e.className = 'bkwarn'; return; }
+    var when = new Date(info.t).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+    if (info.h === cur) e.textContent = 'Backup is up to date (saved ' + when + ').';
+    else { e.textContent = 'You have changes since your last backup (' + when + '). Save a new one before you stop.'; e.className = 'bkwarn'; }
+  }
+  function doBackup() {
+    var payload = JSON.stringify({ app: 'client-project-guide', version: 3, saved: new Date().toISOString(), data: data }, null, 2);
+    var h = hashStr(JSON.stringify(data));
+    return saveFile('Client Guide backup.json', new Blob([payload], { type: 'application/json' })).then(function () {
+      try { localStorage.setItem(BKKEY, JSON.stringify({ t: Date.now(), h: h })); } catch (e) {}
+      updateBk();
+    });
+  }
+
   /* ---------- backup and restore (used on the first page and on the Save page) ---------- */
   function backupUI() {
     var f = el('div', 'blk plain');
@@ -570,10 +596,9 @@ CHANGES TO MAKE:
     var rrow = el('div', 'actions'); var ryes = el('button', 'btn danger', 'Yes, replace my notes'); ryes.type = 'button';
     var rno = el('button', 'btn', 'Cancel'); rno.type = 'button'; rrow.appendChild(ryes); rrow.appendChild(rno); rconf.appendChild(rrow); f.appendChild(rconf);
     bsave.addEventListener('click', function () {
-      var payload = JSON.stringify({ app: 'client-project-guide', version: 3, saved: new Date().toISOString(), data: data }, null, 2);
-      saveFile('Client Guide backup.json', new Blob([payload], { type: 'application/json' }))
+      doBackup()
         .then(function () { bmsg.textContent = 'Your backup file should be in your downloads. Move it to your Google Drive.'; })
-        .catch(function (e) { bmsg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The backup did not save. Use “Copy all my notes” on the Save and export page instead.'; });
+        .catch(function (e) { bmsg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The backup did not save. Use \u201cCopy all my notes\u201d on the Save and export page instead.'; });
     });
     rin.addEventListener('change', function () {
       var file = rin.files && rin.files[0]; if (!file) return;
@@ -681,6 +706,10 @@ CHANGES TO MAKE:
         break;
       case 'stop':
         s.className = 'blk callout tone-red'; s.appendChild(label('stop')); s.appendChild(el('div', 'ctitle', b.title)); paras(b.paras, s);
+        var sb = el('div', 'actions'); var sbb = el('button', 'btn small', 'Save a backup file first'); sbb.type = 'button';
+        var sbm = el('span', 'copynote'); sbm.setAttribute('role', 'status');
+        sbb.addEventListener('click', function () { doBackup().then(function () { sbm.textContent = 'Saved. Move the file to your Google Drive.'; }).catch(function () { sbm.textContent = 'The backup did not save. Try the Save and export page.'; }); });
+        sb.appendChild(sbb); sb.appendChild(sbm); s.appendChild(sb);
         if (b.links) { var lr = el('div', 'actions'); b.links.forEach(function (l) { var a = el('a', 'btn', l.text); a.href = l.url; a.target = '_blank'; a.rel = 'noopener'; lr.appendChild(a); }); s.appendChild(lr); }
         break;
       case 'objmaker': s.className = 'blk'; s.appendChild(objMaker(b)); break;
@@ -850,7 +879,8 @@ CHANGES TO MAKE:
 
   /* ---------- boot ---------- */
   var exporter = { collectNotes: collectNotes, collectFront: collectFront, notesToText: notesToText, buildDocx: buildDocx };
-  load(); buildNav(); updateNav();
+  load(); buildNav(); updateNav(); updateBk();
+  document.getElementById('bkbtn').addEventListener('click', function () { doBackup().catch(function () { setStatus('The backup did not save. Use Save and export instead.'); }); });
   window.addEventListener('hashchange', show);
   document.getElementById('menubtn').addEventListener('click', function () { document.body.classList.toggle('navopen'); });
   document.getElementById('scrim').addEventListener('click', function () { document.body.classList.remove('navopen'); });
