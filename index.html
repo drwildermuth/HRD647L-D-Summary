@@ -210,28 +210,29 @@ if (typeof module !== 'undefined') module.exports = { collectNotes: collectNotes
 
 var CONTENT = {
   title: "Working With a Client Under Time Pressure: A Guided Exploration",
-  intro: "This guide helps you prepare your learning objectives and your scenario. At the end, you collect your notes, your Rise link, and a short reflection on how you used AI into one Word document. That document is what you submit.",
+  intro: "This guide helps you prepare your learning objectives and your scenario. At the end, you collect your notes, your Rise link, and a short reflection on how you used AI into one Word document called the preparation sheet. That document is what you submit.",
   paras: [
     "Real clients are busy, give you information in pieces, and sometimes answer a different question than the one you asked. You will rarely have everything you want before you have to start. In fact, this is why “real-life” practitioners often criticize the ADDIE model: it’s too rigid, assuming each step smoothly leads to the next.",
     "This guide shows you how to use AI to move faster without letting it do your thinking. The rule is simple: AI organizes and proposes; you check and decide."
   ],
   note: "A note here: This is not about “not wanting you to use AI.” Learning & development professionals use AI quite a bit these days. It’s about doing what we often call in the field “keeping the leader in the loop” — ensuring that you, the human, are firmly in charge. Also, from personal experience: AI-generated courses tend to be pretty and well written, but they seldom (unless you work quite a bit on prompting, changing, challenging, etc.) follow Merrill’s Principles of Instruction. Instead, they are more likely to fit the “teach and quiz” variety. In particular, AI-generated scenarios can have one serious fault: they are too obvious. The “right” answer is smooth, precise, and often detailed. The “wrong” answer is so obviously wrong that the exercise is unlikely to lead to learning.",
-  howto: "There are six steps. In Steps 1 to 5, you say what you need and what you know, and the AI researches and organizes. You read it and mark what matters. You write a learning objective. The AI proposes scenario ideas, and then builds one into a full scenario. In Step 6, you collect everything you will submit. The page builds each prompt from what you type. You copy it into your AI and read what comes back. Every step uses the same five signs, so you always know who is doing what.",
+  howto: "There are six steps. In Steps 1 to 5, you say what you need and what you know, and the AI researches and organizes. You read it and mark what matters. You write a learning objective. The AI proposes scenario ideas, and then builds one into a full scenario. In Step 6, you collect everything you will submit. The page builds each prompt from what you type. You copy it into your AI and read what comes back. Every step uses the same signs, so you always know who is doing what.",
   key: [
     { icon: "pencil", label: "Your turn", text: "The part only you can do." },
     { icon: "msg", label: "Ask your AI", text: "A prompt to copy into your AI tool. Parts in [brackets] fill in from what you have already typed." },
     { icon: "search", label: "Check it", text: "What to question before you go on. Nothing to type." },
     { icon: "done", label: "Done when", text: "What you should have before you move on." },
-    { icon: "warn", label: "Watch out", text: "A rule or risk to keep in mind." }
+    { icon: "warn", label: "Watch out", text: "A rule or risk to keep in mind." },
+    { icon: "stop", label: "Stop and do", text: "Leave the guide for a moment to watch a video or build something, then come back." }
   ],
   howtoNote: [
     "Work in one AI chat, so the AI keeps your documents and earlier answers. The only exception is the critique in Step 5, which uses a fresh chat on purpose. You paste the AI’s reply back here only when the page asks. If you start a new chat, paste in the summary from Step 1 first.",
     "You are not expected to write the scenario yourself. The AI drafts it. You judge it, find what is not right, and direct the changes. Where you do not know the industry, check with sources and the client.",
     "You do not need to have everything before you start. Keep a list of what is missing, and keep moving. Keep notes on how you use AI as you go: what you asked, what you checked, and what you kept or changed. In Step 6 you will describe it in your own words."
   ],
-  closing: "Next, open Save and export, download your Word document, and upload it in Canvas. That one file is your submission.",
+  closing: "Next, open Save and export, download your preparation sheet, and upload it in Canvas. That one file is your submission.",
   front: ["s6_team", "s6_link"],
-  bloom: [["Remember", ["list", "name", "recall", "identify", "state"]], ["Understand", ["explain", "summarize", "describe", "classify", "paraphrase"]], ["Apply", ["use", "carry out", "demonstrate", "perform", "apply"]], ["Analyze", ["compare", "distinguish", "diagnose", "examine", "differentiate"]], ["Evaluate", ["judge", "justify", "prioritize", "critique", "defend"]], ["Create", ["design", "draft", "propose", "construct", "develop"]]],
+  bloom: [["Remember", ["list", "name", "recall", "identify", "state", "define", "label", "recognize", "locate", "select"]], ["Understand", ["explain", "summarize", "describe", "classify", "paraphrase", "interpret", "illustrate", "predict", "give examples of", "distinguish between"]], ["Apply", ["use", "carry out", "demonstrate", "perform", "apply", "implement", "solve", "respond to", "handle", "adapt"]], ["Analyze", ["compare", "distinguish", "diagnose", "examine", "differentiate", "break down", "investigate", "trace", "organize", "infer"]], ["Evaluate", ["judge", "justify", "prioritize", "critique", "defend", "assess", "recommend", "weigh", "decide", "validate"]], ["Create", ["design", "draft", "propose", "construct", "develop", "plan", "compose", "formulate", "build", "revise"]]],
   phases: [
     { name: "Understand", steps: [
       { title: "Step 1. Tell the AI what you need and what you know", doneKey: "s1_done",
@@ -309,7 +310,10 @@ MY OBJECTIVES:
 [paste]`,
             fills: [{ token: "[need]", keys: ["s1_need"] }, { token: "[matters]", keys: ["s2_matters"] }, { token: "[paste]", keys: ["s3_o1", "s3_o2", "s3_o3"], join: "\n" }] },
           { t: "check", text: "Can you trace each objective to something the client said? Could you watch someone do it? Edit your objectives above in your own words. Later prompts use what is in those boxes." },
-          { t: "done", text: "you have one to three objectives in your own words." }
+          { t: "done", text: "you have one to three objectives in your own words." },
+          { t: "stop", title: "Build your course skeleton in Rise", paras: [
+            { text: "Your objectives are enough to start. Open Rise and build a cover page with your course title, three to five placeholder lessons (a title and a note on what will go in each), and one marked spot where your scenario will go. Placeholder text is fine, and you can change it later. Then come back for Step 4." },
+            { text: "When you are ready to share it: Publish (top right), Quick Share, Copy link. You will paste the link in Step 6." } ] }
         ] }
     ] },
     { name: "Generate", steps: [
@@ -400,12 +404,15 @@ CHANGES TO MAKE:
             fills: [{ token: "[changes]", keys: ["s5_changes"] }] },
           { t: "turn", text: "Paste the revised scenario here. It goes into your Word document, and it is what I will read.", fields: [{ key: "s5_final", label: "Paste the revised scenario here", kind: "big" }] },
           { t: "check", text: "Compare the revision with the draft. Did the AI make only the changes you asked for? Did anything new slip in? Any new company fact must be sourced or marked [INVENTED]. Check every fact against your Step 1 sources." },
-          { t: "done", text: "you have a revised scenario that you checked line by line and can defend, or a plan from Step 4 if you ran out of time." }
+          { t: "done", text: "you have a revised scenario that you checked line by line and can defend, or a plan from Step 4 if you ran out of time." },
+          { t: "stop", title: "Try your scenario in Lovable and in Rise", paras: [
+            { text: "Watch the two videos, then try your scenario in each tool. A team can split the work, with one partner on each tool. Note one thing you noticed in each. You will write it down in Step 6." } ],
+            links: [{ text: "Video: Creating scenarios with Lovable", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-lovable" }, { text: "Video: Creating scenarios with Articulate", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-articulate" }] }
         ] }
     ] },
     { name: "Submit", steps: [
       { title: "Step 6. Collect what you will submit", doneKey: "s6_done",
-        purpose: "Everything you type on this page goes into your Word document. You submit that one file in Canvas.",
+        purpose: "Everything you type on this page goes into your preparation sheet. You submit that one file in Canvas, and your Rise link goes inside it.",
         blocks: [
           { t: "turn", text: "Teams use one guide for the whole team. A partner can load your backup file to see and edit the same notes.", fields: [
             { key: "s6_team", label: "Team members’ names (if you are working alone, write your own name)", kind: "area" } ] },
@@ -428,9 +435,9 @@ CHANGES TO MAKE:
           { t: "turn", text: "", fields: [
             { key: "s6_stmt", label: "What each member did", kind: "area" },
             { key: "s6_sign", label: "Signatures (type each member’s full name)", kind: "area" } ] },
-          { t: "check", text: "Read through your notes from Steps 1 to 5. Do your objectives sound like you wrote them? Does your scenario or plan show what you chose and why? Then open Save and export and download your Word document." },
+          { t: "check", text: "Read through your notes from Steps 1 to 5. Do your objectives sound like you wrote them? Does your scenario or plan show what you chose and why? Then open Save and export and download your preparation sheet." },
           { t: "golink", text: "Go to Save and export" },
-          { t: "done", text: "every box on this page is filled in, and you have downloaded your Word document." }
+          { t: "done", text: "every box on this page is filled in, and you have downloaded your preparation sheet." }
         ] }
     ] }
   ]
@@ -461,6 +468,7 @@ CHANGES TO MAKE:
     msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
     done: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    stop: '<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
     warn: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
   };
   function icon(name) {
@@ -468,7 +476,7 @@ CHANGES TO MAKE:
     s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'ico'); s.setAttribute('aria-hidden', 'true');
     s.innerHTML = ICONS[name]; return s;
   }
-  var LABELS = { turn: ['pencil', 'Your turn'], ai: ['msg', 'Ask your AI'], check: ['search', 'Check it'], done: ['done', 'Done when'], watch: ['warn', 'Watch out'] };
+  var LABELS = { turn: ['pencil', 'Your turn'], ai: ['msg', 'Ask your AI'], check: ['search', 'Check it'], done: ['done', 'Done when'], watch: ['warn', 'Watch out'], stop: ['stop', 'Stop and do'] };
   function label(kind) { var d = el('div', 'lab lab-' + kind); d.appendChild(icon(LABELS[kind][0])); d.appendChild(el('span', null, LABELS[kind][1])); return d; }
   function grow(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
 
@@ -671,6 +679,10 @@ CHANGES TO MAKE:
         inp.addEventListener('change', function () { data[step.doneKey] = inp.checked; persist(); updateNav(); });
         cb.appendChild(inp); cb.appendChild(el('span', null, 'Mark this step done')); s.appendChild(cb);
         break;
+      case 'stop':
+        s.className = 'blk callout tone-red'; s.appendChild(label('stop')); s.appendChild(el('div', 'ctitle', b.title)); paras(b.paras, s);
+        if (b.links) { var lr = el('div', 'actions'); b.links.forEach(function (l) { var a = el('a', 'btn', l.text); a.href = l.url; a.target = '_blank'; a.rel = 'noopener'; lr.appendChild(a); }); s.appendChild(lr); }
+        break;
       case 'objmaker': s.className = 'blk'; s.appendChild(objMaker(b)); break;
       case 'callout': s.className = 'blk callout tone-' + b.tone; paras(b.paras, s); break;
       case 'plain': s.className = 'blk plain'; s.appendChild(el('p', 'para', b.text)); break;
@@ -715,8 +727,12 @@ CHANGES TO MAKE:
     f.appendChild(key);
     C.howtoNote.forEach(function (p) { f.appendChild(el('p', 'para', p)); });
     var warn = el('div', 'callout tone-red');
-    warn.appendChild(el('p', 'para', 'Do not type confidential client information into this page. Your notes are kept in this browser on this device only. What you submit is the Word document you download at the end.'));
+    warn.appendChild(el('p', 'para', 'Do not type confidential client information into this page. Your notes are kept in this browser on this device only. What you submit is the preparation sheet you download at the end.'));
     f.appendChild(warn);
+    var tl = el('div', 'callout tone-gray'); tl.appendChild(el('div', 'ctitle', 'Also this week'));
+    var tp = el('p', 'para'); tp.appendChild(document.createTextNode('Sign up for your project meeting on the Your Project Meeting page in Module 4, or use this '));
+    var sa = el('a', 'inlinelink', 'sign-up sheet for class time'); sa.href = 'https://docs.google.com/spreadsheets/d/1cEXVWAN8_eytffBTLuvrWSAW3-OD21QUZX0BtFYPsZc/edit?usp=sharing'; sa.target = '_blank'; sa.rel = 'noopener'; tp.appendChild(sa);
+    tp.appendChild(document.createTextNode('. The guide will tell you when to stop and build your skeleton, and when to watch the scenario videos.')); tl.appendChild(tp); f.appendChild(tl);
     f.appendChild(backupUI());
     var go = el('button', 'btn primary', 'Begin Step 1'); go.type = 'button'; go.addEventListener('click', function () { goto('step-1'); });
     f.appendChild(go);
@@ -740,9 +756,9 @@ CHANGES TO MAKE:
   function viewSave() {
     var f = document.createDocumentFragment();
     f.appendChild(el('h1', null, 'Save and export'));
-    f.appendChild(el('p', 'lead', 'Your notes save automatically in this browser. The Word document is what you submit in Canvas. Use the other buttons to keep a copy outside the browser.'));
+    f.appendChild(el('p', 'lead', 'Your notes save automatically in this browser. The preparation sheet is a Word document, and it is what you submit in Canvas. It already includes your Rise link, your tool note, and your AI reflection from Step 6. Use the other buttons to keep a copy outside the browser.'));
     var box = el('div', 'actions');
-    var w = el('button', 'btn primary', 'Download my notes as a Word document'); w.type = 'button'; w.id = 'btnWord';
+    var w = el('button', 'btn primary', 'Download my preparation sheet for submission'); w.type = 'button'; w.id = 'btnWord';
     var c = el('button', 'btn', 'Copy all my notes'); c.type = 'button';
     box.appendChild(w); box.appendChild(c); f.appendChild(box);
     var msg = el('p', 'para msg'); msg.setAttribute('role', 'status'); f.appendChild(msg);
@@ -760,7 +776,7 @@ CHANGES TO MAKE:
       if (!window.docx) { msg.textContent = 'The Word export could not load. Use “Copy all my notes” instead.'; return; }
       var doc = exporter.buildDocx(window.docx, C.title, n, fr);
       window.docx.Packer.toBlob(doc).then(function (blob) {
-        return saveFile('My notes - Client Project Guide.docx', blob).then(function () { msg.textContent = 'Your Word document should be in your downloads.'; });
+        return saveFile('Preparation Sheet - Client Project Guide.docx', blob).then(function () { msg.textContent = 'Your Word document should be in your downloads.'; });
       }).catch(function (e) { msg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The download did not work. Use “Copy all my notes” instead.'; });
     });
     var ta = el('textarea', 'inp big'); ta.id = 'copybox'; ta.hidden = true; ta.readOnly = true; ta.setAttribute('aria-label', 'All my notes'); f.appendChild(ta);
