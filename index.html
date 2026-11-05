@@ -234,6 +234,7 @@ var CONTENT = {
     "You do not need to have everything before you start. Keep a list of what is missing, and keep moving. Keep notes on how you use AI as you go: what you asked, what you checked, and what you kept or changed. In Step 6 you will describe it in your own words."
   ],
   closing: "Next, open Save and export, download your preparation sheet, and upload it in Canvas. That one file is your submission.",
+  sheetTitle: "Preparation Sheet",
   front: ["s6_team", "s6_link"],
   bloom: [["Remember", ["list", "name", "recall", "identify", "state", "define", "label", "recognize", "locate", "select"]], ["Understand", ["explain", "summarize", "describe", "classify", "paraphrase", "interpret", "illustrate", "predict", "give examples of", "distinguish between"]], ["Apply", ["use", "carry out", "demonstrate", "perform", "apply", "implement", "solve", "respond to", "handle", "adapt"]], ["Analyze", ["compare", "distinguish", "diagnose", "examine", "differentiate", "break down", "investigate", "trace", "organize", "infer"]], ["Evaluate", ["judge", "justify", "prioritize", "critique", "defend", "assess", "recommend", "weigh", "decide", "validate"]], ["Create", ["design", "draft", "propose", "construct", "develop", "plan", "compose", "formulate", "build", "revise"]]],
   phases: [
@@ -795,7 +796,7 @@ CHANGES TO MAKE:
     function notes() { return exporter.collectNotes(C, data); }
     function front() { return exporter.collectFront(C, data); }
     c.addEventListener('click', function () {
-      var txt = exporter.notesToText(C.title, notes(), front());
+      var txt = exporter.notesToText(C.sheetTitle, notes(), front());
       function ok() { msg.textContent = 'Copied. Paste it into a document.'; }
       function fb() { ta.hidden = false; ta.value = txt; ta.select(); msg.textContent = 'Select all of the text in the box below and copy it.'; }
       try { navigator.clipboard.writeText(txt).then(ok, fb); } catch (e) { fb(); }
@@ -804,7 +805,7 @@ CHANGES TO MAKE:
       var n = notes(), fr = front();
       if (!n.length && !fr.length) { msg.textContent = 'There is nothing to export yet.'; return; }
       if (!window.docx) { msg.textContent = 'The Word export could not load. Use “Copy all my notes” instead.'; return; }
-      var doc = exporter.buildDocx(window.docx, C.title, n, fr);
+      var doc = exporter.buildDocx(window.docx, C.sheetTitle, n, fr);
       window.docx.Packer.toBlob(doc).then(function (blob) {
         return saveFile('Preparation Sheet - Client Project Guide.docx', blob).then(function () { msg.textContent = 'Your Word document should be in your downloads.'; });
       }).catch(function (e) { msg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The download did not work. Use “Copy all my notes” instead.'; });
