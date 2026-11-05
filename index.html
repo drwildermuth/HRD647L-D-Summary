@@ -128,7 +128,7 @@ input.inp.line { field-sizing: fixed; }
 <div class="app">
   <nav class="side" aria-label="Guide steps">
     <p class="brand">Working With a Client Under Time Pressure</p>
-    <div class="progress"><div id="progtext">0 of 5 steps done</div><div id="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-label="Steps done"><div id="progfill"></div></div></div>
+    <div class="progress"><div id="progtext">0 of 6 steps done</div><div id="progbar" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Steps done"><div id="progfill"></div></div></div>
     <ul id="navlist"></ul>
   </nav>
   <div id="scrim"></div>
@@ -144,12 +144,16 @@ input.inp.line { field-sizing: fixed; }
 /* Notes collection and export. Pure functions. */
 function collectNotes(CONTENT, data) {
   var out = [];
+  var front = CONTENT.front || [];
   function val(k) { var v = data[k]; return typeof v === 'string' ? v.trim() : v; }
   CONTENT.phases.forEach(function (ph) {
     ph.steps.forEach(function (st) {
       var items = [];
       st.blocks.forEach(function (b) {
-        (b.fields || []).forEach(function (f) { var v = val(f.key); if (v) items.push({ label: f.label, text: v }); });
+        (b.fields || []).forEach(function (f) {
+          if (front.indexOf(f.key) >= 0) return;
+          var v = val(f.key); if (v) items.push({ label: f.label, text: v });
+        });
       });
       var done = !!data[st.doneKey];
       if (items.length || done) out.push({ heading: st.title, done: done, items: items });
@@ -157,42 +161,62 @@ function collectNotes(CONTENT, data) {
   });
   return out;
 }
-function notesToText(title, notes) {
+function collectFront(CONTENT, data) {
+  var out = [], front = CONTENT.front || [];
+  front.forEach(function (k) {
+    CONTENT.phases.forEach(function (ph) {
+      ph.steps.forEach(function (st) {
+        st.blocks.forEach(function (b) {
+          (b.fields || []).forEach(function (f) {
+            if (f.key !== k) return;
+            var v = data[k]; v = typeof v === 'string' ? v.trim() : v;
+            if (v) out.push({ label: f.label, text: v });
+          });
+        });
+      });
+    });
+  });
+  return out;
+}
+function notesToText(title, notes, front) {
   var L = [title, ''];
+  (front || []).forEach(function (it) { L.push(it.label); L.push(it.text); L.push(''); });
   notes.forEach(function (s) {
     L.push(s.heading + (s.done ? '  [marked done]' : '')); L.push('');
     s.items.forEach(function (it) { L.push(it.label); L.push(it.text); L.push(''); });
   });
   return L.join('\n');
 }
-function buildDocx(lib, title, notes) {
+function buildDocx(lib, title, notes, front) {
   var Document = lib.Document, Paragraph = lib.Paragraph, TextRun = lib.TextRun, HeadingLevel = lib.HeadingLevel;
   var kids = [], F = 'Calibri';
   kids.push(new Paragraph({ children: [new TextRun({ text: title, bold: true, size: 32, color: '980000', font: F })], spacing: { after: 240 } }));
+  function item(it) {
+    kids.push(new Paragraph({ spacing: { before: 100, after: 40 }, children: [new TextRun({ text: it.label, bold: true, size: 22, color: '980000', font: F })] }));
+    String(it.text).split('\n').forEach(function (ln) {
+      kids.push(new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: ln, size: 22, font: F })] }));
+    });
+  }
+  (front || []).forEach(item);
   notes.forEach(function (s) {
     kids.push(new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 280, after: 120 },
       children: [new TextRun({ text: s.heading, bold: true, italics: true, size: 24, color: '073763', font: F })] }));
     if (s.done) kids.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: 'Marked done', size: 20, color: '595959', font: F })] }));
-    s.items.forEach(function (it) {
-      kids.push(new Paragraph({ spacing: { before: 100, after: 40 }, children: [new TextRun({ text: it.label, bold: true, size: 22, color: '980000', font: F })] }));
-      String(it.text).split('\n').forEach(function (ln) {
-        kids.push(new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: ln, size: 22, font: F })] }));
-      });
-    });
+    s.items.forEach(item);
   });
   return new Document({ sections: [{ properties: {}, children: kids }] });
 }
-if (typeof module !== 'undefined') module.exports = { collectNotes: collectNotes, notesToText: notesToText, buildDocx: buildDocx };
+if (typeof module !== 'undefined') module.exports = { collectNotes: collectNotes, collectFront: collectFront, notesToText: notesToText, buildDocx: buildDocx };
 
 var CONTENT = {
   title: "Working With a Client Under Time Pressure: A Guided Exploration",
-  intro: "This is a guide to help you get started. You do not need to submit anything yet.",
+  intro: "This guide helps you prepare your learning objectives and your scenario. At the end, you collect your notes, your Rise link, and a short reflection on how you used AI into one Word document. That document is what you submit.",
   paras: [
     "Real clients are busy, give you information in pieces, and sometimes answer a different question than the one you asked. You will rarely have everything you want before you have to start. In fact, this is why “real-life” practitioners often criticize the ADDIE model: it’s too rigid, assuming each step smoothly leads to the next.",
     "This guide shows you how to use AI to move faster without letting it do your thinking. The rule is simple: AI organizes and proposes; you check and decide."
   ],
   note: "A note here: This is not about “not wanting you to use AI.” Learning & development professionals use AI quite a bit these days. It’s about doing what we often call in the field “keeping the leader in the loop” — ensuring that you, the human, are firmly in charge. Also, from personal experience: AI-generated courses tend to be pretty and well written, but they seldom (unless you work quite a bit on prompting, changing, challenging, etc.) follow Merrill’s Principles of Instruction. Instead, they are more likely to fit the “teach and quiz” variety. In particular, AI-generated scenarios can have one serious fault: they are too obvious. The “right” answer is smooth, precise, and often detailed. The “wrong” answer is so obviously wrong that the exercise is unlikely to lead to learning.",
-  howto: "There are five steps. You say what you need and what you know, and the AI researches and organizes. You read it and mark what matters. You write a learning objective. The AI proposes scenario ideas, and then builds one into a full scenario. The page builds each prompt from what you type. You copy it into your AI and read what comes back. Every step uses the same five signs, so you always know who is doing what.",
+  howto: "There are six steps. In Steps 1 to 5, you say what you need and what you know, and the AI researches and organizes. You read it and mark what matters. You write a learning objective. The AI proposes scenario ideas, and then builds one into a full scenario. In Step 6, you collect everything you will submit. The page builds each prompt from what you type. You copy it into your AI and read what comes back. Every step uses the same five signs, so you always know who is doing what.",
   key: [
     { icon: "pencil", label: "Your turn", text: "The part only you can do." },
     { icon: "msg", label: "Ask your AI", text: "A prompt to copy into your AI tool. Parts in [brackets] fill in from what you have already typed." },
@@ -203,9 +227,10 @@ var CONTENT = {
   howtoNote: [
     "Work in one AI chat, so the AI keeps your documents and earlier answers. The only exception is the critique in Step 5, which uses a fresh chat on purpose. You paste the AI’s reply back here only when the page asks. If you start a new chat, paste in the summary from Step 1 first.",
     "You are not expected to write the scenario yourself. The AI drafts it. You judge it, find what is not right, and direct the changes. Where you do not know the industry, check with sources and the client.",
-    "You do not need to have everything before you start. Keep a list of what is missing, and keep moving. Keep the links to your AI chats. You may be asked to show how you used AI."
+    "You do not need to have everything before you start. Keep a list of what is missing, and keep moving. Keep notes on how you use AI as you go: what you asked, what you checked, and what you kept or changed. In Step 6 you will describe it in your own words."
   ],
-  closing: "Your objectives and your notes on what matters most go straight into your project proposal. Your open questions are what you send the client.",
+  closing: "Next, open Save and export, download your Word document, and upload it in Canvas. That one file is your submission.",
+  front: ["s6_team", "s6_link"],
   bloom: [["Remember", ["list", "name", "recall", "identify", "state"]], ["Understand", ["explain", "summarize", "describe", "classify", "paraphrase"]], ["Apply", ["use", "carry out", "demonstrate", "perform", "apply"]], ["Analyze", ["compare", "distinguish", "diagnose", "examine", "differentiate"]], ["Evaluate", ["judge", "justify", "prioritize", "critique", "defend"]], ["Create", ["design", "draft", "propose", "construct", "develop"]]],
   phases: [
     { name: "Understand", steps: [
@@ -219,7 +244,8 @@ var CONTENT = {
             { key: "s1_ask", label: "Anything specific I need the AI to find or produce? (optional)", kind: "area" } ] },
           { t: "callout", tone: "blue", paras: [
             { lead: "Working on the class client?", text: "Use the materials your instructor shared in the course. Do not contact the client; your instructor will tell you where to send questions." },
-            { lead: "Working on your own client?", text: "Use what the client has given you. If you have almost nothing, stop and get the basics first: the client’s purpose with the training, the audience, the problem, and examples of it happening. Without some real information from a client, you cannot build a course likely to help." } ] },
+            { lead: "Working on your own client?", text: "Use what the client has given you. If you have almost nothing, stop and get the basics first: the client’s purpose with the training, the audience, the problem, and examples of it happening. Without some real information from a client, you cannot build a course likely to help." },
+            { lead: "Is your instructor your client?", text: "Talk with your instructor first, and take notes on the conversation. Agree on the topic, the audience, and what should change. Your notes are what you already have. If you have almost nothing, stop and have that conversation before you go on." } ] },
           { t: "watch", paras: [
             { lead: "Public information:", text: "It helps you understand the client. It does not go into the course unless the client asks for it. If the AI finds lawsuits, citations, or news about incidents, knowing about them does not mean building a scenario around them." },
             { lead: "Confidential documents:", text: "Before you attach or paste anything into an AI tool, make sure you are allowed to. If you are not sure, ask the client. Do not paste anything marked confidential." } ] },
@@ -320,6 +346,7 @@ LEARNING OBJECTIVES:
       { title: "Step 5. Build the scenario and check it", doneKey: "s5_done",
         purpose: "Turn the chosen episode into a full scenario, check it before you build anything, and change only what you decide to change.",
         blocks: [
+          { t: "callout", tone: "gray", paras: [{ lead: "Short on time?", text: "If you cannot finish this step, your notes from Step 4 are your plan: the episode you chose and what it should accomplish. You can still go on to Step 6." }] },
           { t: "ai", intro: "Left alone, AI writes scenarios that are smooth and obvious. This prompt tells it what to avoid. Stay in the same chat.", heading: "Paste this into your AI (same chat)", prompt: `Take the episode I chose from your list of six above and build it into a scenario with two decision points. Use only what is already in this conversation.
 
 EPISODE I CHOSE: [chosen]
@@ -371,18 +398,46 @@ SCENARIO: [paste]`,
 CHANGES TO MAKE:
 [changes]`,
             fills: [{ token: "[changes]", keys: ["s5_changes"] }] },
-          { t: "turn", text: "Optional, but it keeps the scenario with your notes and in your Word export.", fields: [{ key: "s5_final", label: "Paste the revised scenario here", kind: "big" }] },
+          { t: "turn", text: "Paste the revised scenario here. It goes into your Word document, and it is what I will read.", fields: [{ key: "s5_final", label: "Paste the revised scenario here", kind: "big" }] },
           { t: "check", text: "Compare the revision with the draft. Did the AI make only the changes you asked for? Did anything new slip in? Any new company fact must be sourced or marked [INVENTED]. Check every fact against your Step 1 sources." },
-          { t: "done", text: "you have a revised scenario that you checked line by line and can defend." }
+          { t: "done", text: "you have a revised scenario that you checked line by line and can defend, or a plan from Step 4 if you ran out of time." }
+        ] }
+    ] },
+    { name: "Submit", steps: [
+      { title: "Step 6. Collect what you will submit", doneKey: "s6_done",
+        purpose: "Everything you type on this page goes into your Word document. You submit that one file in Canvas.",
+        blocks: [
+          { t: "turn", text: "Teams use one guide for the whole team. A partner can load your backup file to see and edit the same notes.", fields: [
+            { key: "s6_team", label: "Team members’ names (if you are working alone, write your own name)", kind: "area" } ] },
+          { t: "callout", tone: "blue", paras: [
+            { lead: "Your Rise skeleton link:", text: "In Rise, click Publish (top right), then Quick Share, then Copy link. The link starts with share.articulate.com. Open it in a private (incognito) window to be sure it opens without an Articulate login." } ] },
+          { t: "turn", text: "", fields: [
+            { key: "s6_link", label: "Your Rise skeleton link (Quick Share)", kind: "line" },
+            { key: "s6_tool", label: "Testing your scenario in the tools: which tool did you try, and what is one thing you noticed? (One or two sentences. A team can split the work, with one partner on each tool.)", kind: "area" } ] },
+          { t: "list", title: "Your AI reflection: tell me exactly how you used AI", items: [
+            "For each time you used AI, say which tool and where (for example, Claude, ChatGPT, Lovable, or Rise).",
+            "What you asked. Describe it, or paste the key prompt.",
+            "What you checked, and how.",
+            "What you kept, changed, or rejected, and why.",
+            "One thing the AI got wrong or missed." ] },
+          { t: "watch", paras: [{ text: "A general statement such as “AI was used to brainstorm and edit, and the ideas are my own” is not a disclosure and will not earn Complete. Write in your own words, and be specific to your project." }] },
+          { t: "turn", text: "", fields: [
+            { key: "s6_ai", label: "My AI reflection", kind: "big" } ] },
+          { t: "callout", tone: "gray", paras: [
+            { lead: "Team statement:", text: "If you worked with a partner, say exactly what each member did (for example, research, scenario design, skeleton, tool testing). Each member signs by typing their full name. By typing your name, you confirm the statement is accurate. If you are working alone, write “working alone” and your name." } ] },
+          { t: "turn", text: "", fields: [
+            { key: "s6_stmt", label: "What each member did", kind: "area" },
+            { key: "s6_sign", label: "Signatures (type each member’s full name)", kind: "area" } ] },
+          { t: "check", text: "Read through your notes from Steps 1 to 5. Do your objectives sound like you wrote them? Does your scenario or plan show what you chose and why? Then open Save and export and download your Word document." },
+          { t: "golink", text: "Go to Save and export" },
+          { t: "done", text: "every box on this page is filled in, and you have downloaded your Word document." }
         ] }
     ] }
   ]
 };
 
-var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution center","s1_need":"Managers learn about new safety policies unevenly, so some employees work under rules they have not been told. After the course, managers should confirm that every employee understands a new policy before assigning work.","s1_know":"Kickoff notes from the client, an email thread, a transcript of a Q&A call. (Made-up sample data for testing.)\nhttps://example.com/company - the company website","s1_ask":"","s2_matters":"1. The policy was announced while some people were away. 2. Nobody can see who has read it. 3. Missing: who can stop work and who approves a restart.","s3_o1":"After this course, shift managers will be able to confirm that an employee who missed a policy rollout understands it before assigning work.","s3_o2":"After this course, shift managers will be able to decide when to hold a job to close a safety gap.","s3_o3":"","s4_role":"a shift manager at a regional distribution center","s4_chosen":"Episode 1: the employee who was out when the policy was announced and is scheduled alone on a heavy job today.","s4_why":"A manager should be able to tell a clear gap from an unclear one and know when to ask Safety.","s5_draft":"SETTING\nA loading dock at 7:15 a.m. ...\n\nDECISION POINT 1\nA. Text Marcus the key points and send him.\nB. Hold him for a short in-person review, then send him.\nC. Send him with a second employee.\nD. Ask Safety to resend the policy to everyone.\n(Sample draft.)","s5_changes":"Give A a stronger reason and B a real cost.","s5_final":"SETTING\nA loading dock at 7:15 a.m. ...\n(Sample revised scenario.)","s1_done":true,"s2_done":true,"s3_done":true};
-
 (function () {
-  var C = CONTENT, SAMPLE = SAMPLE_DATA;
+  var C = CONTENT;
   var KEY = 'hrd647_client_guide_v3';
   var data = {};
   var memOnly = false;
@@ -510,7 +565,7 @@ var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution cent
       var payload = JSON.stringify({ app: 'client-project-guide', version: 3, saved: new Date().toISOString(), data: data }, null, 2);
       saveFile('Client Guide backup.json', new Blob([payload], { type: 'application/json' }))
         .then(function () { bmsg.textContent = 'Your backup file should be in your downloads. Move it to your Google Drive.'; })
-        .catch(function (e) { bmsg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The backup did not save. Use \u201cCopy all my notes\u201d on the Save and export page instead.'; });
+        .catch(function (e) { bmsg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The backup did not save. Use “Copy all my notes” on the Save and export page instead.'; });
     });
     rin.addEventListener('change', function () {
       var file = rin.files && rin.files[0]; if (!file) return;
@@ -619,6 +674,10 @@ var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution cent
       case 'objmaker': s.className = 'blk'; s.appendChild(objMaker(b)); break;
       case 'callout': s.className = 'blk callout tone-' + b.tone; paras(b.paras, s); break;
       case 'plain': s.className = 'blk plain'; s.appendChild(el('p', 'para', b.text)); break;
+      case 'golink':
+        s.className = 'blk plain';
+        var gl = el('a', 'btn primary', b.text); gl.href = '#save'; s.appendChild(gl);
+        break;
       case 'list':
         s.className = 'blk callout tone-gray'; s.appendChild(el('div', 'ctitle', b.title));
         var ul = el('ul'); b.items.forEach(function (i) { ul.appendChild(el('li', null, i)); }); s.appendChild(ul); break;
@@ -656,7 +715,7 @@ var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution cent
     f.appendChild(key);
     C.howtoNote.forEach(function (p) { f.appendChild(el('p', 'para', p)); });
     var warn = el('div', 'callout tone-red');
-    warn.appendChild(el('p', 'para', 'Do not type confidential client information into this page. Your notes are kept in this browser on this device only.'));
+    warn.appendChild(el('p', 'para', 'Do not type confidential client information into this page. Your notes are kept in this browser on this device only. What you submit is the Word document you download at the end.'));
     f.appendChild(warn);
     f.appendChild(backupUI());
     var go = el('button', 'btn primary', 'Begin Step 1'); go.type = 'button'; go.addEventListener('click', function () { goto('step-1'); });
@@ -681,43 +740,42 @@ var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution cent
   function viewSave() {
     var f = document.createDocumentFragment();
     f.appendChild(el('h1', null, 'Save and export'));
-    f.appendChild(el('p', 'lead', 'Your notes save automatically in this browser. Use these buttons to keep a copy outside it.'));
+    f.appendChild(el('p', 'lead', 'Your notes save automatically in this browser. The Word document is what you submit in Canvas. Use the other buttons to keep a copy outside the browser.'));
     var box = el('div', 'actions');
     var w = el('button', 'btn primary', 'Download my notes as a Word document'); w.type = 'button'; w.id = 'btnWord';
     var c = el('button', 'btn', 'Copy all my notes'); c.type = 'button';
     box.appendChild(w); box.appendChild(c); f.appendChild(box);
     var msg = el('p', 'para msg'); msg.setAttribute('role', 'status'); f.appendChild(msg);
     function notes() { return exporter.collectNotes(C, data); }
+    function front() { return exporter.collectFront(C, data); }
     c.addEventListener('click', function () {
-      var txt = exporter.notesToText(C.title, notes());
+      var txt = exporter.notesToText(C.title, notes(), front());
       function ok() { msg.textContent = 'Copied. Paste it into a document.'; }
       function fb() { ta.hidden = false; ta.value = txt; ta.select(); msg.textContent = 'Select all of the text in the box below and copy it.'; }
       try { navigator.clipboard.writeText(txt).then(ok, fb); } catch (e) { fb(); }
     });
     w.addEventListener('click', function () {
-      var n = notes();
-      if (!n.length) { msg.textContent = 'There is nothing to export yet.'; return; }
-      if (!window.docx) { msg.textContent = 'The Word export could not load. Use \u201cCopy all my notes\u201d instead.'; return; }
-      var doc = exporter.buildDocx(window.docx, C.title, n);
+      var n = notes(), fr = front();
+      if (!n.length && !fr.length) { msg.textContent = 'There is nothing to export yet.'; return; }
+      if (!window.docx) { msg.textContent = 'The Word export could not load. Use “Copy all my notes” instead.'; return; }
+      var doc = exporter.buildDocx(window.docx, C.title, n, fr);
       window.docx.Packer.toBlob(doc).then(function (blob) {
         return saveFile('My notes - Client Project Guide.docx', blob).then(function () { msg.textContent = 'Your Word document should be in your downloads.'; });
-      }).catch(function (e) { msg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The download did not work. Use \u201cCopy all my notes\u201d instead.'; });
+      }).catch(function (e) { msg.textContent = (e && e.code === 'declined') ? 'Download cancelled.' : 'The download did not work. Use “Copy all my notes” instead.'; });
     });
     var ta = el('textarea', 'inp big'); ta.id = 'copybox'; ta.hidden = true; ta.readOnly = true; ta.setAttribute('aria-label', 'All my notes'); f.appendChild(ta);
 
     f.appendChild(backupUI());
 
-    f.appendChild(el('h2', null, 'Test tools'));
-    f.appendChild(el('p', 'para', 'This version has no sign-in. These buttons help you try every feature.'));
+    f.appendChild(el('h2', null, 'Start over'));
+    f.appendChild(el('p', 'para', 'This clears every note in this browser. Save a backup first if you might want them back.'));
     var t = el('div', 'actions');
-    var samp = el('button', 'btn', 'Fill with sample notes'); samp.type = 'button';
     var del = el('button', 'btn danger', 'Delete all my notes'); del.type = 'button';
-    t.appendChild(samp); t.appendChild(del); f.appendChild(t);
+    t.appendChild(del); f.appendChild(t);
     var conf = el('div', 'callout tone-red'); conf.hidden = true;
     conf.appendChild(el('p', 'para', 'This deletes every note and every checkmark in this browser. You cannot undo it.'));
     var row = el('div', 'actions'); var yes = el('button', 'btn danger', 'Yes, delete everything'); yes.type = 'button';
     var no = el('button', 'btn', 'Cancel'); no.type = 'button'; row.appendChild(yes); row.appendChild(no); conf.appendChild(row); f.appendChild(conf);
-    samp.addEventListener('click', function () { data = JSON.parse(JSON.stringify(SAMPLE)); persist(); msg.textContent = 'Sample notes added (a made-up example, not a real client). Look through the steps.'; updateNav(); });
     del.addEventListener('click', function () { conf.hidden = false; });
     no.addEventListener('click', function () { conf.hidden = true; });
     yes.addEventListener('click', function () { data = {}; persist(); conf.hidden = true; msg.textContent = 'All notes deleted.'; updateNav(); });
@@ -775,7 +833,7 @@ var SAMPLE_DATA = {"s1_audience":"shift managers at a regional distribution cent
   }
 
   /* ---------- boot ---------- */
-  var exporter = { collectNotes: collectNotes, notesToText: notesToText, buildDocx: buildDocx };
+  var exporter = { collectNotes: collectNotes, collectFront: collectFront, notesToText: notesToText, buildDocx: buildDocx };
   load(); buildNav(); updateNav();
   window.addEventListener('hashchange', show);
   document.getElementById('menubtn').addEventListener('click', function () { document.body.classList.toggle('navopen'); });
