@@ -431,7 +431,7 @@ HOW IT WORKS:
 THE SCENARIO TEXT:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
-          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below. Your SETTING and DEBRIEF are left out of the prompt on purpose; you add those to your Rise page separately (see the list below the prompt).", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
+          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
 IMPORTANT FOR READABILITY:
 - Rise shows scene text quickly, so every message must be short: one or two short sentences, no more than about 25 words.
@@ -449,12 +449,10 @@ STRUCTURE:
 THE DECISION POINTS AND OUTCOMES:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
-          { t: "list", title: "Around the Scenario block in your Rise skeleton", items: [
-            "Put your SETTING in a Text block just above the Scenario block.",
-            "Put your DEBRIEF in a Text block just below it.",
+          { t: "list", title: "After Rise builds it", items: [
+            "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text.",
             "Choose the character yourself. The character on screen is the other person your decision-maker is talking to (in the sample, the senior technician), not the decision-maker. Click the character, then filter the library by clothing, gender, or age until one fits the role.",
-            "A scene shows one character, and you can change the pose (happy, neutral, sad) for each message to match what the person says.",
-            "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text." ] },
+            "A scene shows one character. You can change the pose (happy, neutral, sad) for each message to match what the person says." ] },
           { t: "watch", paras: [{ text: "Check the result scene by scene against your Step 5 text. Rise may reword things, turn a title into dialogue, or add a detail that was not in your text. Fix what is wrong before you submit. Rise also limits you to its built-in characters." }] },
           { t: "callout", tone: "gray", paras: [{ lead: "Why the two differ:", text: "Both tools can build from your text. In Lovable you describe the look and feel in words. In Rise you work with its built-in characters and backgrounds, so you have less control over how it looks." }] }
         ] }
