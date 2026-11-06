@@ -430,15 +430,21 @@ HOW IT WORKS:
 THE SCENARIO TEXT:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
-          { t: "list", title: "In Rise there is no prompt to paste: you build it by hand", items: [
-            "Open your skeleton and go to the spot you marked for the scenario. Add a Scenario block there.",
-            "Put the SETTING in a Text block just above the Scenario block, not inside a scene. Rise tends to turn scene titles into dialogue.",
-            "Use one scene for each decision point and one for each \u201cwhat happens next.\u201d Scenes hold short dialogue, so shorten the text, keeping the facts.",
-            "Pick characters from Rise\u2019s built-in library. You cannot upload your own for the Scenario block, so choose one that fits the role.",
-            "Scene 1 sets the Start picture, so choose its character and background first.",
-            "Use the IMAGE NOTE lines to pick backgrounds. Skip anything with logos or readable signs.",
-            "Link every option to its next scene, and send every outcome to the second decision point. Then preview and open your Quick Share link to check it." ] },
-          { t: "callout", tone: "gray", paras: [{ lead: "Why the two are different:", text: "Lovable builds the whole app from your text and a description of how it should look. Rise gives you built-in pieces and you put the text in yourself. Rise is more limited in how it looks, so pick what fits and do not fight it." }] }
+          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. The scenario text fills in from your Step 5 box.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the text below. Use ONLY the text below, word for word. Do not add facts, names, options, or outcomes of your own.
+
+- The learner plays the person who has to decide.
+- Open with the SETTING, then one scene for each decision point, with the options as the learner's choices, in the order given.
+- After each choice, show the matching "What happens next" text.
+- The second decision point is reached from every outcome of the first.
+- Do not mark any choice as correct or incorrect. No score.
+- End with the DEBRIEF.
+- Ignore the IMAGE NOTE lines. Use plain, neutral backgrounds and characters that fit the roles, with no logos or readable signs.
+
+THE SCENARIO TEXT:
+[scenario]`,
+            fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
+          { t: "watch", paras: [{ text: "Check the result scene by scene against your Step 5 text. Rise may reword things, turn a title into dialogue, or add a detail that was not in your text. Fix what is wrong before you submit. Rise also limits you to its built-in characters." }] },
+          { t: "callout", tone: "gray", paras: [{ lead: "Why the two differ:", text: "Both tools can build from your text. In Lovable you describe the look and feel in words. In Rise you work with its built-in characters and backgrounds, so you have less control over how it looks." }] }
         ] }
     ] },
     { name: "Submit", steps: [
