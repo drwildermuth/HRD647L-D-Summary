@@ -214,7 +214,7 @@ if (typeof module !== 'undefined') module.exports = { collectNotes: collectNotes
 
 var CONTENT = {
   title: "Client Project Guide",
-  intro: "This guide helps you prepare your learning objectives and your scenario. At the end, you collect your notes, your Rise link, and a short reflection on how you used AI into one Word document called the preparation sheet. That document is what you submit.",
+  intro: "This guide helps you prepare your learning objectives and your scenario, and build a very small course skeleton in Rise. At the end, you collect your notes, your Rise link, and a short reflection on how you used AI into one Word document called the preparation sheet. That document is what you submit.",
   paras: [
     "Real clients are busy, give you information in pieces, and sometimes answer a different question than the one you asked. You will rarely have everything you want before you have to start. In fact, this is why “real-life” practitioners often criticize the ADDIE model: it’s too rigid, assuming each step smoothly leads to the next.",
     "This guide shows you how to use AI to move faster without letting it do your thinking. The rule is simple: AI organizes and proposes; you check and decide."
@@ -317,7 +317,7 @@ MY OBJECTIVES:
           { t: "check", text: "Can you trace each objective to something the client said? Could you watch someone do it? Edit your objectives above in your own words. Later prompts use what is in those boxes." },
           { t: "done", text: "you have one to three objectives in your own words." },
           { t: "stop", title: "Build your course skeleton in Rise", paras: [
-            { text: "Your objectives are enough to start. Open Rise and build a cover page with your course title, three to five placeholder lessons (a title and a note on what will go in each), and one marked spot where your scenario will go. Placeholder text is fine, and you can change it later. Then come back for Step 4. Before you leave the guide, save a backup." },
+            { text: "Your objectives are enough to start. Open Rise and build a very small course with three parts: an Introduction (a couple of short paragraphs on what the course is and who it is for), your Learning Objectives (in their own block), and a Scenario section. For now, the Scenario section can hold one line saying the scenario is coming. You will add the real scenario after Step 5. Nothing else is needed, and placeholder text is fine. Then come back for Step 4. Before you leave the guide, save a backup." },
             { text: "When you are ready to share it: Publish (top right), Quick Share, Copy link. You will paste the link in Step 6." } ] }
         ] }
     ] },
@@ -411,9 +411,10 @@ CHANGES TO MAKE:
           { t: "turn", text: "Paste the revised scenario here. It goes into your Word document, and it is what I will read.", fields: [{ key: "s5_final", label: "Paste the revised scenario here", kind: "big" }] },
           { t: "check", text: "Compare the revision with the draft. Did the AI make only the changes you asked for? Did anything new slip in? Any new company fact must be sourced or marked [INVENTED]. Check every fact against your Step 1 sources." },
           { t: "done", text: "you have a revised scenario that you checked line by line and can defend, or a plan from Step 4 if you ran out of time." },
-          { t: "stop", title: "Try your scenario in Lovable and in Rise", paras: [
-            { text: "Watch the two videos, then try your scenario in each tool. A team can split the work, with one partner on each tool. Note one thing you noticed in each. You will write it down in Step 6." } ],
-            links: [{ text: "Video: Creating scenarios with Lovable", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-lovable" }, { text: "Video: Creating scenarios with Articulate", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-articulate" }] },
+          { t: "stop", title: "Build your scenario in Lovable (recommended)", paras: [
+            { text: "Lovable is the tool I recommend for your scenario this week, and it is all you need. Watch the Lovable video, build your scenario there, and publish it. Trying Articulate is optional. If you try it, a team can split the work, with one partner on each tool. Note one thing you noticed. You will write it down in Step 6." },
+            { text: "When your scenario is ready, add it to the Scenario section of your Rise skeleton. Embed your published Lovable app in an embed or code block, or add a link to it if embedding does not work." } ],
+            links: [{ text: "Video: Creating scenarios with Lovable", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-lovable" }, { text: "Video (optional): Creating scenarios with Articulate", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-articulate" }] },
           { t: "ai", intro: "In Lovable you describe the look and feel in words, and Lovable builds the app. Open a new Lovable project and paste this. The scenario text fills in from your Step 5 box. Then preview it, tell Lovable what to fix, and publish.", heading: "Paste this into Lovable", prompt: `Build a single-page branching scenario app from the text below. Use ONLY the text below, word for word. Do not add facts, names, options, or outcomes of your own.
 
 LOOK AND FEEL:
@@ -434,12 +435,12 @@ THE SCENARIO TEXT:
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
           { t: "turn", text: "Rise picks the on-screen character, and it often picks one that does not fit. Tell it who your decision-maker is talking to, so the guess is closer.", fields: [
             { key: "s5_char", label: "Who is your decision-maker talking to in each decision? (name, gender, age range, and job, for each decision)", kind: "area" } ] },
-          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
+          { t: "ai", intro: "Optional. Articulate can also build the scenario for you. The scenario it builds is its own item, not a block inside your skeleton, so you will add a link to it in the Scenario section. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
 IMPORTANT FOR READABILITY:
-- Rise shows scene text quickly, so every message must be short: one short sentence, no more than about 15 words.
-- Break each situation into several short messages, spoken by the characters. Never use a long paragraph in one scene.
-- Keep the facts and the order. Shorten the wording, do not change the meaning.
+- Rise shows scene text quickly, and it splits text into tiny pieces if it is given short sentences. Write each message as one short paragraph of continuous prose: three or four sentences, about 50 to 70 words. Do not break a paragraph into separate short sentences or fragments.
+- Use one paragraph for the setup of a scene, and one short paragraph (two or three sentences) for what a character says. No bullet points and no one-line messages.
+- Keep the facts and the order. Tighten the wording, do not change the meaning.
 
 STRUCTURE:
 - The learner plays the person who has to decide.
@@ -455,12 +456,12 @@ THE DECISION POINTS AND OUTCOMES:
             fills: [{ token: "[char]", keys: ["s5_char"], drop: true }, { token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
           { t: "watch", paras: [{ lead: "Change the character right away:", text: "After you send the prompt, Rise shows a scenario brief with a small picture of a character. Click that character and choose the right one there, and check the gender and age fit the person in your scenario, before you go any further. If you skip this, it is very hard to change the character later." }] },
           { t: "list", title: "After Rise builds it", items: [
-            "Click Experience, then choose Chat (text only). The text is much easier to read that way.",
-            "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text.",
+            "Click Experience, then choose Chat (text only). The text is much easier to read that way, and you can use the scroll bar on the right to go back and reread anything that went by.",
+            "Play it through. If a paragraph has been split into several quick messages, fix that scene so it is one short paragraph again. If a scene is still too long to read comfortably, trim it, but keep full sentences.",
             "The character on screen is the other person your decision-maker is talking to (in the sample, the senior technician), not the decision-maker. When you change the character in the brief, filter the library by clothing, gender, or age until one fits the role.",
             "A scene shows one character. You can change the pose (happy, neutral, sad) for each message to match what the person says." ] },
           { t: "watch", paras: [{ text: "Check the result scene by scene against your Step 5 text. Rise may reword things, turn a title into dialogue, or add a detail that was not in your text. Fix what is wrong before you submit. Rise also limits you to its built-in characters." }] },
-          { t: "callout", tone: "gray", paras: [{ lead: "Why the two differ:", text: "Both tools can build from your text. In Lovable you describe the look and feel in words. In Rise you work with its built-in characters and backgrounds, so you have less control over how it looks." }] }
+          { t: "callout", tone: "gray", paras: [{ lead: "Why Lovable is recommended:", text: "Both tools can build from your text. In Lovable you describe the look and feel in words, and you control how it looks and reads. In Articulate you work with its built-in characters and backgrounds, and the text moves at its own speed." }] }
         ] }
     ] },
     { name: "Submit", steps: [
@@ -470,11 +471,11 @@ THE DECISION POINTS AND OUTCOMES:
           { t: "turn", text: "Teams use one guide for the whole team. A partner can load your backup file to see and edit the same notes.", fields: [
             { key: "s6_team", label: "Team members’ names (if you are working alone, write your own name)", kind: "area" } ] },
           { t: "callout", tone: "blue", paras: [
-            { lead: "Your Rise skeleton link:", text: "You submit two links: one for your Rise skeleton and one for your scenario. In Rise, click Publish, then Quick Share, then Copy link. The link starts with share.articulate.com. For a Lovable scenario, use the published link. Open each link in a private (incognito) window to be sure it opens without a login." } ] },
+            { lead: "Your Rise skeleton link:", text: "Your skeleton should have an Introduction, your Learning Objectives, and a Scenario section that embeds or links to your scenario. You submit two links: one for your Rise skeleton and one for your scenario. In Rise, click Publish, then Quick Share, then Copy link. The link starts with share.articulate.com. For a Lovable scenario, use the published link. Open each link in a private (incognito) window to be sure it opens without a login." } ] },
           { t: "turn", text: "", fields: [
             { key: "s6_link", label: "Your Rise skeleton link (Quick Share)", kind: "line" },
-            { key: "s6_scen", label: "Your scenario link (the Quick Share link from Rise, or the published Lovable link)", kind: "line" },
-            { key: "s6_tool", label: "Testing your scenario in the tools: which tool did you try, and what is one thing you noticed? (One or two sentences. A team can split the work, with one partner on each tool.)", kind: "area" } ] },
+            { key: "s6_scen", label: "Your scenario link (the published Lovable link, or the Quick Share link from Articulate)", kind: "line" },
+            { key: "s6_tool", label: "Which tool did you use for your scenario, and what is one thing you noticed? (One or two sentences. If you also tried Articulate, say what you noticed there.)", kind: "area" } ] },
           { t: "list", title: "Your AI reflection: tell me exactly how you used AI", items: [
             "For each time you used AI, say which tool and where (for example, Claude, ChatGPT, Lovable, or Rise).",
             "What you asked. Describe it, or paste the key prompt.",
