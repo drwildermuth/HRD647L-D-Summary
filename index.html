@@ -431,6 +431,8 @@ HOW IT WORKS:
 THE SCENARIO TEXT:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
+          { t: "turn", text: "Rise picks the on-screen character, and it often picks one that does not fit. Tell it who your decision-maker is talking to, so the guess is closer.", fields: [
+            { key: "s5_char", label: "Who is your decision-maker talking to in each decision? (name, gender, age range, and job, for each decision)", kind: "area" } ] },
           { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
 IMPORTANT FOR READABILITY:
@@ -440,6 +442,7 @@ IMPORTANT FOR READABILITY:
 
 STRUCTURE:
 - The learner plays the person who has to decide.
+- The character on screen is the person the learner is speaking to. Match that person's gender, age, and job to this description: [char]
 - One decision point at a time, with the three options as the learner's choices (Rise allows at most three), in the order given.
 - After each choice, show the matching "What happens next" text, in short messages.
 - The second decision point is reached from every outcome of the first.
@@ -448,8 +451,8 @@ STRUCTURE:
 
 THE DECISION POINTS AND OUTCOMES:
 [scenario]`,
-            fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
-          { t: "watch", paras: [{ lead: "Change the character right away:", text: "After you send the prompt, Rise shows a scenario brief with a small picture of a character. Click that character and choose the right one there, before you go any further. If you skip this, it is very hard to change the character later." }] },
+            fills: [{ token: "[char]", keys: ["s5_char"], drop: true }, { token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
+          { t: "watch", paras: [{ lead: "Change the character right away:", text: "After you send the prompt, Rise shows a scenario brief with a small picture of a character. Click that character and choose the right one there, and check the gender and age fit the person in your scenario, before you go any further. If you skip this, it is very hard to change the character later." }] },
           { t: "list", title: "After Rise builds it", items: [
             "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text.",
             "The character on screen is the other person your decision-maker is talking to (in the sample, the senior technician), not the decision-maker. When you change the character in the brief, filter the library by clothing, gender, or age until one fits the role.",
