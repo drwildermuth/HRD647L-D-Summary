@@ -368,6 +368,7 @@ For each decision point, give exactly three options (A, B, and C). Follow these 
 - Do not label any option as best, and put the options in an order that does not favor any of them.
 - Keep the options about the same length and tone.
 - No villain, and no option that is obviously foolish.
+- The first time each person who talks to the decision-maker appears, say their gender, approximate age, and job (for example, "Marcus, a man in his fifties, a senior technician"). A tool will use this to pick a picture of that person.
 - The situation, not the options, should carry the uncertainty. Do not tell the learner whether a violation is occurring.
 - After each option, describe what happens next as concrete facts (time, cost, a person's reaction) without signaling whether the choice was good or bad.
 - Use only facts from the information in this conversation. If you invent a fact about the company (a policy, a system, a number, a job title), mark it [INVENTED]. Ordinary story details, such as a first name or the time of day, do not need the mark.
@@ -442,7 +443,7 @@ IMPORTANT FOR READABILITY:
 
 STRUCTURE:
 - The learner plays the person who has to decide.
-- The character on screen is the person the learner is speaking to. Match that person's gender, age, and job to this description: [char]
+- The character on screen is the person the learner is speaking to. The character MUST match this description in gender, age, and job: [char]
 - One decision point at a time, with the three options as the learner's choices (Rise allows at most three), in the order given.
 - After each choice, show the matching "What happens next" text, in short messages.
 - The second decision point is reached from every outcome of the first.
@@ -454,6 +455,7 @@ THE DECISION POINTS AND OUTCOMES:
             fills: [{ token: "[char]", keys: ["s5_char"], drop: true }, { token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
           { t: "watch", paras: [{ lead: "Change the character right away:", text: "After you send the prompt, Rise shows a scenario brief with a small picture of a character. Click that character and choose the right one there, and check the gender and age fit the person in your scenario, before you go any further. If you skip this, it is very hard to change the character later." }] },
           { t: "list", title: "After Rise builds it", items: [
+            "Click Experience, then choose Chat (text only). The text is much easier to read that way.",
             "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text.",
             "The character on screen is the other person your decision-maker is talking to (in the sample, the senior technician), not the decision-maker. When you change the character in the brief, filter the library by clothing, gender, or age until one fits the role.",
             "A scene shows one character. You can change the pose (happy, neutral, sad) for each message to match what the person says." ] },
