@@ -431,19 +431,29 @@ HOW IT WORKS:
 THE SCENARIO TEXT:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
-          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. The scenario text fills in from your Step 5 box.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the text below. Use ONLY the text below, word for word. Do not add facts, names, options, or outcomes of your own.
+          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. The decision points and outcomes from your Step 5 box fill in below. The SETTING and the DEBRIEF do not go into the Scenario block; you will put those in Text blocks around it.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
+IMPORTANT FOR READABILITY:
+- Rise shows scene text quickly, so every message must be short: one or two short sentences, no more than about 25 words.
+- Break each situation into several short messages, spoken by the characters. Never use a long paragraph in one scene.
+- Keep the facts and the order. Shorten the wording, do not change the meaning.
+
+STRUCTURE:
 - The learner plays the person who has to decide.
-- Open with the SETTING, then one scene for each decision point, with the options as the learner's choices, in the order given.
-- After each choice, show the matching "What happens next" text.
+- One decision point at a time, with the options as the learner's choices, in the order given.
+- After each choice, show the matching "What happens next" text, in short messages.
 - The second decision point is reached from every outcome of the first.
 - Do not mark any choice as correct or incorrect. No score.
-- End with the DEBRIEF.
-- Ignore the IMAGE NOTE lines. Use plain, neutral backgrounds and characters that fit the roles, with no logos or readable signs.
+- Do not include a SETTING or DEBRIEF scene. Ignore the IMAGE NOTE lines.
+- Use plain, neutral backgrounds and characters that fit the roles, with no logos or readable signs.
 
-THE SCENARIO TEXT:
+THE DECISION POINTS AND OUTCOMES:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
+          { t: "list", title: "Around the Scenario block in your Rise skeleton", items: [
+            "Put your SETTING in a Text block just above the Scenario block.",
+            "Put your DEBRIEF in a Text block just below it.",
+            "Play it through. If any scene goes by too fast to read, shorten that scene\u2019s text." ] },
           { t: "watch", paras: [{ text: "Check the result scene by scene against your Step 5 text. Rise may reword things, turn a title into dialogue, or add a detail that was not in your text. Fix what is wrong before you submit. Rise also limits you to its built-in characters." }] },
           { t: "callout", tone: "gray", paras: [{ lead: "Why the two differ:", text: "Both tools can build from your text. In Lovable you describe the look and feel in words. In Rise you work with its built-in characters and backgrounds, so you have less control over how it looks." }] }
         ] }
