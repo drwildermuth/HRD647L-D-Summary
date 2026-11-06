@@ -431,7 +431,7 @@ HOW IT WORKS:
 THE SCENARIO TEXT:
 [scenario]`,
             fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
-          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. The decision points and outcomes from your Step 5 box fill in below. The SETTING and the DEBRIEF do not go into the Scenario block; you will put those in Text blocks around it.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
+          { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below. Your SETTING and DEBRIEF are left out of the prompt on purpose; you add those to your Rise page separately (see the list below the prompt).", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
 IMPORTANT FOR READABILITY:
 - Rise shows scene text quickly, so every message must be short: one or two short sentences, no more than about 25 words.
@@ -444,12 +444,11 @@ STRUCTURE:
 - After each choice, show the matching "What happens next" text, in short messages.
 - The second decision point is reached from every outcome of the first.
 - Do not mark any choice as correct or incorrect. No score.
-- Do not include a SETTING or DEBRIEF scene. Ignore the IMAGE NOTE lines.
 - Use plain, neutral backgrounds and characters that fit the roles, with no logos or readable signs.
 
 THE DECISION POINTS AND OUTCOMES:
 [scenario]`,
-            fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
+            fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true, strip: true }] },
           { t: "list", title: "Around the Scenario block in your Rise skeleton", items: [
             "Put your SETTING in a Text block just above the Scenario block.",
             "Put your DEBRIEF in a Text block just below it.",
@@ -546,11 +545,25 @@ THE DECISION POINTS AND OUTCOMES:
   }
 
   /* ---------- prompt box ---------- */
+  function stripFrame(t) {
+    var lines = t.split('\n'), out = [], skip = false, endAll = false;
+    lines.forEach(function (ln) {
+      if (endAll) return;
+      if (/^\W*DEBRIEF\b/i.test(ln)) { endAll = true; return; }
+      if (/^\W*SETTING( QUESTIONS)?\W*$/i.test(ln)) { skip = true; return; }
+      if (skip && ln.trim() === '') { skip = false; return; }
+      if (skip) return;
+      if (/^\W*IMAGE NOTE\b/i.test(ln)) return;
+      out.push(ln);
+    });
+    return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
   function fillPrompt(b) {
     var text = b.prompt, pos = {};
     (b.fills || []).forEach(function (f) {
       function nonEmpty(keys) { return keys.map(function (k) { return (data[k] || '').trim(); }).filter(Boolean); }
       var val = f.first ? (nonEmpty(f.keys)[0] || '') : nonEmpty(f.keys).join(f.join || '\n');
+      if (f.strip && val) val = stripFrame(val);
       var idx = text.indexOf(f.token, pos[f.token] || 0);
       if (idx < 0) return;
       if (val) { text = text.slice(0, idx) + val + text.slice(idx + f.token.length); pos[f.token] = idx + val.length; }
