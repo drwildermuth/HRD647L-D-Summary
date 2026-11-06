@@ -236,7 +236,7 @@ var CONTENT = {
   ],
   closing: "Next, open Save and export, download your preparation sheet, and upload it in Canvas. That one file is your submission.",
   sheetTitle: "Preparation Sheet",
-  front: ["s6_team", "s6_link"],
+  front: ["s6_team", "s6_link", "s6_scen"],
   bloom: [["Remember", ["list", "name", "recall", "identify", "state", "define", "label", "recognize", "locate", "select"]], ["Understand", ["explain", "summarize", "describe", "classify", "paraphrase", "interpret", "illustrate", "predict", "give examples of", "distinguish between"]], ["Apply", ["use", "carry out", "demonstrate", "perform", "apply", "implement", "solve", "respond to", "handle", "adapt"]], ["Analyze", ["compare", "distinguish", "diagnose", "examine", "differentiate", "break down", "investigate", "trace", "organize", "infer"]], ["Evaluate", ["judge", "justify", "prioritize", "critique", "defend", "assess", "recommend", "weigh", "decide", "validate"]], ["Create", ["design", "draft", "propose", "construct", "develop", "plan", "compose", "formulate", "build", "revise"]]],
   phases: [
     { name: "Understand", steps: [
@@ -434,7 +434,7 @@ THE SCENARIO TEXT:
           { t: "ai", intro: "Rise can build the scenario for you. In Rise, start a new item and, when it asks what you want to build, choose Scenario. In the box that says \u201cDescribe what you want to create,\u201d paste this. Your decision points and outcomes from Step 5 fill in below.", heading: "Paste this into Rise", prompt: `Create a branching scenario from the decision points and outcomes below. Use ONLY the content below. Do not add facts, names, options, or outcomes of your own.
 
 IMPORTANT FOR READABILITY:
-- Rise shows scene text quickly, so every message must be short: one or two short sentences, no more than about 25 words.
+- Rise shows scene text quickly, so every message must be short: one short sentence, no more than about 15 words.
 - Break each situation into several short messages, spoken by the characters. Never use a long paragraph in one scene.
 - Keep the facts and the order. Shorten the wording, do not change the meaning.
 
@@ -464,9 +464,10 @@ THE DECISION POINTS AND OUTCOMES:
           { t: "turn", text: "Teams use one guide for the whole team. A partner can load your backup file to see and edit the same notes.", fields: [
             { key: "s6_team", label: "Team members’ names (if you are working alone, write your own name)", kind: "area" } ] },
           { t: "callout", tone: "blue", paras: [
-            { lead: "Your Rise skeleton link:", text: "In Rise, click Publish (top right), then Quick Share, then Copy link. The link starts with share.articulate.com. Open it in a private (incognito) window to be sure it opens without an Articulate login." } ] },
+            { lead: "Your Rise skeleton link:", text: "You submit two links: one for your Rise skeleton and one for your scenario. In Rise, click Publish, then Quick Share, then Copy link. The link starts with share.articulate.com. For a Lovable scenario, use the published link. Open each link in a private (incognito) window to be sure it opens without a login." } ] },
           { t: "turn", text: "", fields: [
             { key: "s6_link", label: "Your Rise skeleton link (Quick Share)", kind: "line" },
+            { key: "s6_scen", label: "Your scenario link (the Quick Share link from Rise, or the published Lovable link)", kind: "line" },
             { key: "s6_tool", label: "Testing your scenario in the tools: which tool did you try, and what is one thing you noticed? (One or two sentences. A team can split the work, with one partner on each tool.)", kind: "area" } ] },
           { t: "list", title: "Your AI reflection: tell me exactly how you used AI", items: [
             "For each time you used AI, say which tool and where (for example, Claude, ChatGPT, Lovable, or Rise).",
