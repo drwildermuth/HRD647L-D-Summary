@@ -411,7 +411,34 @@ CHANGES TO MAKE:
           { t: "done", text: "you have a revised scenario that you checked line by line and can defend, or a plan from Step 4 if you ran out of time." },
           { t: "stop", title: "Try your scenario in Lovable and in Rise", paras: [
             { text: "Watch the two videos, then try your scenario in each tool. A team can split the work, with one partner on each tool. Note one thing you noticed in each. You will write it down in Step 6." } ],
-            links: [{ text: "Video: Creating scenarios with Lovable", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-lovable" }, { text: "Video: Creating scenarios with Articulate", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-articulate" }] }
+            links: [{ text: "Video: Creating scenarios with Lovable", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-lovable" }, { text: "Video: Creating scenarios with Articulate", url: "https://barry.instructure.com/courses/1635909/pages/video-creating-scenarios-with-articulate" }] },
+          { t: "ai", intro: "In Lovable you describe the look and feel in words, and Lovable builds the app. Open a new Lovable project and paste this. The scenario text fills in from your Step 5 box. Then preview it, tell Lovable what to fix, and publish.", heading: "Paste this into Lovable", prompt: `Build a single-page branching scenario app from the text below. Use ONLY the text below, word for word. Do not add facts, names, options, or outcomes of your own.
+
+LOOK AND FEEL:
+- Text only. No photos, stock images, illustrations, icons of people, or logos.
+- Calm and professional: a plain light background, one dark accent color, large readable text, plenty of white space.
+- Works on a phone and a laptop.
+
+HOW IT WORKS:
+- Start with the SETTING on its own screen and a Begin button.
+- Show one decision point per screen: the situation, then the options as buttons, in the order given. Do not shuffle them. Do not mark any option as correct or incorrect.
+- When the learner picks an option, show the matching "What happens next" text, then a Continue button.
+- The second decision point is reached from every option of the first.
+- No score and no points. At the end show the DEBRIEF and a Start over button.
+- Ignore any lines that say IMAGE NOTE.
+
+THE SCENARIO TEXT:
+[scenario]`,
+            fills: [{ token: "[scenario]", keys: ["s5_final", "s5_draft"], first: true }] },
+          { t: "list", title: "In Rise there is no prompt to paste: you build it by hand", items: [
+            "Open your skeleton and go to the spot you marked for the scenario. Add a Scenario block there.",
+            "Put the SETTING in a Text block just above the Scenario block, not inside a scene. Rise tends to turn scene titles into dialogue.",
+            "Use one scene for each decision point and one for each \u201cwhat happens next.\u201d Scenes hold short dialogue, so shorten the text, keeping the facts.",
+            "Pick characters from Rise\u2019s built-in library. You cannot upload your own for the Scenario block, so choose one that fits the role.",
+            "Scene 1 sets the Start picture, so choose its character and background first.",
+            "Use the IMAGE NOTE lines to pick backgrounds. Skip anything with logos or readable signs.",
+            "Link every option to its next scene, and send every outcome to the second decision point. Then preview and open your Quick Share link to check it." ] },
+          { t: "callout", tone: "gray", paras: [{ lead: "Why the two are different:", text: "Lovable builds the whole app from your text and a description of how it should look. Rise gives you built-in pieces and you put the text in yourself. Rise is more limited in how it looks, so pick what fits and do not fight it." }] }
         ] }
     ] },
     { name: "Submit", steps: [
